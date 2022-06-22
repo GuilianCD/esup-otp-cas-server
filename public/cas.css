@@ -1,0 +1,165 @@
+body {  
+    max-width: 800px; 
+    margin: 0 auto; 
+    font-family: Arial,"Helvetica Neue", Helvetica,verdana, sans-serif;
+    background-color: #fff;
+    color: #444; 
+    font-weight: normal; 
+}
+
+a, a:visited {  
+    text-decoration: none;
+    color: #20559A;
+}
+
+a:hover { 
+    color: #2055cc;
+    text-decoration: underline; 
+    cursor: pointer;
+}
+ 
+#errors { 
+    color: #CF4A02;
+}
+ 
+h1 {
+    text-align: center;
+     color: #727780;
+    font-weight: normal;
+     font-size: 30px;
+}
+
+h2 {
+    font-weight: normal; 
+    font-size: 19px;
+    color: #666;
+    padding-bottom: 15px
+}
+
+
+#content { 
+    margin:40px 5px; 
+     }
+
+ul {
+    list-style: none;
+    padding-left: 0;
+}
+input, button {
+    padding: 1rem;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+
+.d-none {
+    display: none !important;
+}
+
+
+
+#code { 
+    display: flex; 
+}
+
+#code > div {
+    flex: 1;
+}
+#code li::before {
+    content: "〉"; 
+    color: #aaa;
+    font-size: 83%;
+    font-weight: 700; 
+}
+
+#code ul {
+    margin-top: 2.8rem;  
+}
+#code li {
+    margin: 0.6rem 0;
+}
+#code_label {
+    margin: 1rem 0;
+}
+
+#token { 
+    width:76%;
+    min-width: 15rem;  
+    border: 0;
+    border-bottom: #b6c7e5 2px dotted; 
+    border-radius: 0.25rem; 
+    background-color: #dfe6f3c2;
+    color: #555; 
+}
+
+#page_icon { 
+    width:23%;  
+} 
+
+/*************/ 
+
+
+#choices {
+    text-align: center; 
+     
+}
+#methodChoices a {
+    display: flex;
+    width:  calc(100% - 40px);  
+    align-items: center;
+    margin: 6px 0px; 
+    padding: 0.2rem 1rem 0.2rem 1.5rem;
+    color: #00326E;
+    text-align: left; 
+    background-color: #dfe6f3de;
+    border: 2px solid #c7d0e0;
+    cursor: pointer; 
+}
+
+#methodChoices a:hover { 
+   border: 2px solid #2055aa;  
+  background-color: #fff; 
+  text-decoration: none; 
+  color:#2055cc; 
+} 
+ 
+
+#methodChoices a > span {
+    flex: 1;
+}
+#methodChoices img {
+    width: 36px;
+}
+    
+
+/***************/
+
+
+#registerform    { 
+    text-align: center; border: 1px dotted #20558a; padding: 25px; 
+    border-radius: 4px; 
+}
+
+#registerform input, #registerform button { 
+    background-color: #dfe6f3;
+    border-radius : 4px; 
+   color: #00326e;
+    margin : 4px; padding: 12px 21px; 
+}
+
+#registerform input:hover, #registerform button:hover {
+   background-color: #dfe6f360; 
+      color: #2055cc; 
+    
+} 
+
+
+/***********/ 
+     
+@media screen and (max-width: 810px) {
+    h1 { font-size: 26px; }
+   #content { padding:15px 15px;  }
+    #token { width:68%; }
+   input, button {  padding: 0.8rem; font-size: 15px; box-sizing: border-box;}
+    
+ }

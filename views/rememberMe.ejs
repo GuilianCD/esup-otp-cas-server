@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Enregistrer l'appareil</title>
+    <link rel="stylesheet" type="text/css" href="cas.css">
+</head>
+
+<body>
+
+    <header role="banner" id="headerEcranConnexion">
+        <script> window.bandeau_anonyme = {}; </script>
+        <script src="https://ent-test.univ-paris1.fr/assets/bandeau-anonyme/loader.js"></script>
+        <div><h1>Authentification renforcée</h1></div>
+    </header>
+
+    <main role="main">
+        <div id="content">
+            <h2>Enregistrer l'appareil</h2>
+
+             Ne pas me demander de code sur ce matériel pendant un mois ?
+
+            <form id="registerform" method="post">
+                <input id="ticket" name="ticket" value="<%= ticket %>" type="hidden">
+                <button accesskey="o">
+                    <span>Oui</span>
+                </button>
+                <button accesskey="n" autofocus
+                        onclick="document.getElementById('rememberMe').value = 'skip'">
+                    <span>Non</span>
+                </button>
+                <input type="hidden" id="rememberMe" name="rememberMe" value="submit">
+        </div>
+    </main>
+    <script>
+        try { 
+            // remove ask=rememberMe and ticket from url for reload/navigation
+            window.history.replaceState({}, null, location.href.replace(/ask=rememberMe/, '').replace(/[?&]ticket=.*/, ''))
+        } catch (e) {}
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>ESUP-OTP</title>
+    <link rel="stylesheet" type="text/css" href="cas.css">
+</head>
+
+<body>
+    <header role="banner" id="headerEcranConnexion">
+        <script> window.bandeau_anonyme = {}; </script>
+        <script src="https://ent-test.univ-paris1.fr/assets/bandeau-anonyme/loader.js"></script>
+        <div><h1>Authentification renforcée</h1></div>
+    </header>
+
+    <main role="main">
+    <div id="content" class="main">
+
+      <form method="post" id="fm1">
+        <input id="ticket" name="ticket" value="<%= ticket %>" type="hidden">
+
+       <div id="errors">
+          <%= error %>
+       </div>
+
+       <div class="main1">
+
+        <div id="no-choices" class="d-none">
+            Vous n'avez pas activé vos mots de passe à usage unique.
+            <br/><br/>
+            Nous vous invitons à activer l'authentification renforcée sur l'application de
+            <a href="https://otpmanager-test.univ-paris1.fr/preferences" target="_blank">gestion d'authentification</a> de votre compte.
+        </div>
+
+        <div id="choices">
+            <h2>
+            <b>Générez un code à usage unique</b>
+            <br>par une des méthodes suivantes pour vous connecter
+            </h2>
+
+            <ul id="methodChoices">
+                <li>Veuillez patienter</li>
+            </ul>
+
+            Un problème ? <a href="mailto:assistance-dsiun@univ-paris1.fr?subject=Problème ESUP-OTP">Contactez la DSIUN</a>
+        </div>
+               
+        <div id="code" class="d-none">
+          <div>                                             
+            <label for="token">
+                <div id="code_label"></div>
+                <input type="text" id="token" tabindex="1" required
+                oninput="autosubmitIfValid(this)"
+                minlength="6" maxlength="6" pattern="[0-9]{6}"
+                placeholder="Saisissez le code de 6 chiffres"
+                accesskey="m" autocomplete="off" name="token" value="">
+            </label>
+
+            <ul>      
+                <li id="resend"><a></a></li>
+                <li id="back_to_choices"><a onclick="clear_errors(); show('choices')">Autre méthode de connexion</a></li>
+                <li>Un problème ? <a href="mailto:assistance-dsiun@univ-paris1.fr?subject=Problème ESUP-OTP">Contactez la DSIUN</a></li>
+            </ul>
+          </div>
+          <img id="page_icon"></div>        
+       </div>
+      </form>                        
+    </div>
+    </main>
+        
+<script src="/javascripts/jquery.min.js"></script>
+<script src="https://otpapi-test.univ-paris1.fr/js/socket.io.js" async></script>
+<script>       
+    function autosubmitIfValid(input) {
+        if (!input.validationMessage) {
+            document.getElementById("fm1").submit()
+        }
+    }
+
+    function clear_errors() {
+        $("#errors").remove();
+    }
+
+    function show(idToShow) {
+        ["no-choices", "choices", "code"].forEach(function (id) {
+            $('#' + id).toggleClass('d-none', id !== idToShow);
+        });
+    }
+    function show_method(chosen) {
+        show('code');
+
+        $("#token, #submitCode").toggleClass('d-none', chosen.method === 'push');
+        $("#token").focus();
+        $("#code_label").html("Merci de renseigner un code :");
+
+        document.querySelector('#page_icon').src = '/images/page-' + (chosen.transport || chosen.method) + ".svg"
+
+        $("#back_to_choices").toggleClass('d-none', $("#methodChoices > li").length <= 1)
+
+        $("#resend").toggleClass('d-none', !chosen.transport)
+        document.querySelector("#resend a").text = chosen.transport === 'push' ? "Demander une nouvelle notification" : "Recevoir un nouveau code"
+        document.querySelector("#resend a").onclick = function () { clear_errors(); activate_method(params, chosen, {}) }
+
+        return false;
+    }
+
+    function getUserOtpMethods(params) {
+        $.ajax({ url: params.apiUrl + '/users/'+ params.uid +'/' + params.userHash }).done(function(data) {
+            if (data.code != "Ok") {
+                alert("Erreur, veuillez réessayer ultérieurement");
+                return;
+            }
+            displayChoices(params, data.user);
+        });
+    }
+    var methods = {
+        // l'ordre est utilisé pour choisir dans quel ordre afficher les méthodes
+        push: { label: { 
+            push: "S'authentifier sur %TRANSPORT%",
+        } },
+        no_transport: { real_methods: [ 'totp', 'bypass'], label: {
+            '': 'Saisir un code TOTP ou un code de secours'
+        } },
+        random_code: { label: { 
+            sms: "Recevoir un code par SMS sur %TRANSPORT%",
+            mail: "Recevoir un code par mél sur %TRANSPORT%",
+        } },
+    }
+
+    function activate_method(params, chosen, opts) {
+        if (chosen.method === 'push') {
+            initializeSocket(params);
+        }
+        if (chosen.transport) {
+            submitCodeRequest(params, chosen, opts);
+        }
+        show_method(chosen);
+    }
+
+    function computeChoices(params, methods_and_transports) {
+        let choices = []
+        $.each(methods, function (method, opts) {
+
+            var params = (opts.real_methods || [method]).map(function (method_) {
+                return methods_and_transports.methods[method_] || {}
+            }).find(function (params) {
+                return params.active
+            });
+            if (!params) return;
+
+            (params.transports.length ? params.transports : ['']).forEach(function (transport) {
+                //if (transport !== '') return;
+                var transport_text = transport && methods_and_transports.transports[transport];
+                var text = opts.label[transport].replace('%TRANSPORT%', transport_text)
+                choices.push({ method: method, transport: transport, transport_text: transport_text, text: text })
+            })
+        })
+        return choices
+    }
+
+    function displayChoices(params, user_params) {
+        let choices = computeChoices(params, user_params)
+        if (choices.length === 0) {
+            show('no-choices');
+            return;
+        }
+        $("#methodChoices").empty().append(choices.map(function (choice) {
+            var button = $("<a class='large'>").click(function () {
+                clear_errors();
+                activate_method(params, choice, {});
+                return false;
+            })
+            button.append($("<span></span>").text(choice.text))
+            button.append($("<img>", { src: "/images/liste-" + (choice.transport || choice.method) + ".svg" } ))
+            return $("<li></li>").append(button)
+        }))
+        const last_send_message = user_params.last_send_message || {}
+        if (!last_send_message.auto || last_send_message.verified || (Date.now() - last_send_message.time) > 4 /* hours */ * 60 * 60 * 1000) {
+            // use first by default
+            activate_method(params, choices[0], { auto: true })
+        }
+    }
+
+    function submitCodeRequest(params, chosen, opts) {
+        $.ajax({
+            type: 'POST',
+            url: params.apiUrl + '/users/'+ params.uid +'/methods/' + chosen.method + '/transports/' + chosen.transport + '/' + params.userHash + (opts.auto ? '?auto' : '')
+        }).done(function(data) {
+            if (data.code !== "Ok") {
+                alert("Erreur, veuillez réessayer ultérieurement");
+                show('choices');
+                console.log("Something is broken : ", data);
+            } else {
+                console.log(chosen)
+                $('#code_label').html(chosen.method === 'push' ? 
+                    "Une notification a été envoyée sur votre portable " + chosen.transport_text + ".<br>En attente de son acceptation." : chosen.transport === 'mail' ? 
+                    "Un code a été envoyé sur votre mél " + chosen.transport_text + ",<br>saisissez le ici pour vous connecter." : 
+                    "Un code a été envoyé au " + chosen.transport_text + ",<br>saisissez le ici pour vous connecter.");
+            }
+        });
+    }
+    
+    function initializeSocket(params) {
+        var socket = io.connect(params.apiUrl, {
+            reconnect: true, 
+            path: "/sockets", 
+            query: 'uid=' + params.uid + '&hash=' + params.userHash + '&app=cas'
+        });
+        socket.on('connect', function () {
+        });          
+        socket.on('userAuth', function (data) {
+            if (data.code == "Ok") {
+                $('#token').val(data.otp);
+                $('#fm1').submit();
+            }
+        });
+    }
+
+    function start(params) {
+        try { 
+            // remove ticket from url for reload/navigation
+            window.history.replaceState({}, null, location.href.replace(/[?&]ticket=.*/, ''))
+        } catch (e) {}
+
+        getUserOtpMethods(params);
+    }
+
+    start(<%- params %>)
+</script>
+
+</body>
+</html>
