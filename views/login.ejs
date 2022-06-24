@@ -220,7 +220,7 @@
     function start(params) {
         try { 
             // remove ticket from url for reload/navigation
-            window.history.replaceState({}, null, location.href.replace(/[?&]ticket=.*/, ''))
+            window.history.replaceState({}, null, location.href.replace(/[?&]ticket=.*/, '').replace(/[&?]auth_checked$/, ''))
         } catch (e) {}
 
         getUserOtpMethods(params);
