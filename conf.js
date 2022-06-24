@@ -12,6 +12,10 @@ module.exports = {
 
     //trust_proxy: 'loopback', // http://expressjs.com/en/guide/behind-proxies.html
 
+    allow_back_channel_single_logout: {
+        if_IP_in: [],
+    },
+
     no_otp: {
         //if_IP_in: "10.0.0.0/8 172.16.0.0/12 192.168.0.0/16".split(" "),
         //if_service: { regexp: '^https://foo[.]univ[.]fr/' },
