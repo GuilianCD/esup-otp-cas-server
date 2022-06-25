@@ -69,7 +69,7 @@
     </div>
     </main>
         
-<script src="/javascripts/jquery.min.js"></script>
+<script src="javascripts/jquery.min.js"></script>
 <script src="https://otpapi-test.univ-paris1.fr/js/socket.io.js" async></script>
 <script>       
     function autosubmitIfValid(input) {
@@ -94,7 +94,7 @@
         $("#token").focus();
         $("#code_label").html("Merci de renseigner un code :");
 
-        document.querySelector('#page_icon').src = '/images/page-' + (chosen.transport || chosen.method) + ".svg"
+        document.querySelector('#page_icon').src = 'images/page-' + (chosen.transport || chosen.method) + ".svg"
 
         $("#back_to_choices").toggleClass('d-none', $("#methodChoices > li").length <= 1)
 
@@ -172,7 +172,7 @@
                 return false;
             })
             button.append($("<span></span>").text(choice.text))
-            button.append($("<img>", { src: "/images/liste-" + (choice.transport || choice.method) + ".svg" } ))
+            button.append($("<img>", { src: "images/liste-" + (choice.transport || choice.method) + ".svg" } ))
             return $("<li></li>").append(button)
         }))
         const last_send_message = user_params.last_send_message || {}
