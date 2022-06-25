@@ -1,6 +1,10 @@
 module.exports = {
     our_base_url: "https://cas.univ.fr/mfa",
     cas_server_validating_password_base_url: "https://cas.univ.fr/cas",
+    allowed_services: {
+        domains_and_hostnames: [ "univ.fr" ],
+        regexp: undefined,
+    },
     
     api_url: "http://localhost:3000/",
     api_password: "changeit",
