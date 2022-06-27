@@ -5,6 +5,10 @@ module.exports = {
         domains_and_hostnames: [ "univ.fr" ],
         regexp: undefined,
     },
+    proxy_cas_services: {
+        //domains_and_hostnames: [],
+        //regexp: ...
+    },
     
     api_url: "http://localhost:3000/",
     api_password: "changeit",
