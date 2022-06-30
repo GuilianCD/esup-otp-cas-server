@@ -1,10 +1,16 @@
 # esup-otp-cas-server
 
-CAS server which delegates to another server the password check + asks for OTP
+CAS server which delegates to another CAS server the password check + asks for OTP
 
-It asks for long-term validation of OTP.
+### Features
 
-It can optionnaly bypass OTP if the user has not activated any methods.
+- asks for OTP long-term validation (stored in a cookie)
+- it can conditionally bypass OTP if the user has not activated any methods
+- handle CAS gateway, proxy tickets CAS, CAS SLO back-channel
+
+Features not yet implemented
+- conditionally limit the allowed methods
+
 
 ### Requirements
 - [esup-otp-api](https://github.com/EsupPortail/esup-otp-api)
