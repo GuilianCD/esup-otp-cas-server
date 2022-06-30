@@ -21,6 +21,10 @@ Features not yet implemented
 - change the fields values in conf.js to your installation
 - npm start
 
+### Diagramme d'explication (en français)
+
+![](docs/esup-otp-cas-server-chainage.png)
+
 
 License
 ----
