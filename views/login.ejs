@@ -87,7 +87,7 @@
             $('#' + id).toggleClass('d-none', id !== idToShow);
         });
     }
-    function show_method(chosen) {
+    function show_method(params, chosen) {
         show('code');
 
         $("#token, #submitCode").toggleClass('d-none', chosen.method === 'push');
@@ -135,7 +135,7 @@
         if (chosen.transport) {
             submitCodeRequest(params, chosen, opts);
         }
-        show_method(chosen);
+        show_method(params, chosen);
     }
 
     function computeChoices(params, methods_and_transports) {
