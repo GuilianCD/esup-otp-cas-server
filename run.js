@@ -33,6 +33,6 @@ app.set("view engine", "ejs");
 app.use(base_path, require('./lib/cas_server')());
 
 
-const port = conf.port || process.env.PORT || '3001'
+const port = process.env.PORT || conf.port || '3001'
 console.log('Starting on port ' + port);
 app.listen(port, process.env.IP);
