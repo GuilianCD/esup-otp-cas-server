@@ -152,8 +152,12 @@
             (params.transports.length ? params.transports : ['']).forEach(function (transport) {
                 //if (transport !== '') return;
                 var transport_text = transport && methods_and_transports.transports[transport];
-                var text = opts.label[transport].replace('%TRANSPORT%', transport_text)
-                choices.push({ method: method, transport: transport, transport_text: transport_text, text: text })
+                if (opts.label[transport]) {
+                    var text = opts.label[transport].replace('%TRANSPORT%', transport_text)
+                    choices.push({ method: method, transport: transport, transport_text: transport_text, text: text })
+                } else {
+                    console.error("weird transport", transport, "for (pseudo) method", method)
+                }
             })
         })
         return choices
