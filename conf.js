@@ -27,6 +27,7 @@ module.exports = {
     api_users_secret: "changeit",
     
     ticket_validity_seconds: 60,
+    uid_validity_seconds: 30 /*minutes*/ * 60,
     otp_validity_seconds: 30 /*minutes*/ * 60,
     otp_long_term_validity_seconds: 30 /*days*/ * 24 * 60 * 60,
 
