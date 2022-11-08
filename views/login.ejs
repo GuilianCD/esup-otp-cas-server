@@ -163,10 +163,15 @@
         return choices
     }
 
+    function server_log(vals) {
+        fetch('log?' + new URLSearchParams(vals))
+    }
+
     function displayChoices(params, user_params) {
         let choices = computeChoices(params, user_params)
         if (choices.length === 0) {
             show('no-choices');
+            try { server_log({ warn: "no-choices", uid: params.uid, service: new URLSearchParams(location.search).get("service") }); } catch (e) {}
             return;
         }
         $("#methodChoices").empty().append(choices.map(function (choice) {
