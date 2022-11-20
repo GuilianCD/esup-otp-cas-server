@@ -92,7 +92,14 @@
 
         $("#token, #submitCode").toggleClass('d-none', chosen.method === 'push');
         $("#token").focus();
-        $("#code_label").html("Merci de renseigner un code :");
+        var methods = chosen.real_methods.sort().join(' ')
+        $("#code_label").html(
+            methods === 'totp' ?
+                "Merci de renseigner le code affiché sur votre application TOTP :" :
+            methods === 'bypass totp' ?
+                "Merci de renseigner le code affiché sur votre application TOTP ou un code de secours :" :
+                "Merci de renseigner un code :"
+        );
 
         document.querySelector('#page_icon').src = 'images/page-' + (chosen.transport || chosen.method) + ".svg"
 
@@ -142,19 +149,18 @@
         let choices = []
         $.each(methods, function (method, opts) {
 
-            var params = (opts.real_methods || [method]).map(function (method_) {
-                return methods_and_transports.methods[method_] || {}
-            }).find(function (params) {
-                return params.active
-            });
-            if (!params) return;
+            var real_methods = (opts.real_methods || [method]).filter(function (method_) {
+                return (methods_and_transports.methods[method_] || {}).active
+            })
+            if (real_methods.length === 0) return;
+            var params = methods_and_transports.methods[real_methods[0]];
 
             (params.transports.length ? params.transports : ['']).forEach(function (transport) {
                 //if (transport !== '') return;
                 var transport_text = transport && methods_and_transports.transports[transport];
                 if (opts.label[transport]) {
                     var text = opts.label[transport].replace('%TRANSPORT%', transport_text)
-                    choices.push({ method: method, transport: transport, transport_text: transport_text, text: text })
+                    choices.push({ method: method, real_methods: real_methods, transport: transport, transport_text: transport_text, text: text })
                 } else {
                     console.error("weird transport", transport, "for (pseudo) method", method)
                 }
