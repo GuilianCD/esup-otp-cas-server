@@ -11,7 +11,7 @@ CAS server which delegates to another CAS server the password check + asks for O
 - handle other CAS server session timeout (via shorter session lifetime)
 
 Features not yet implemented
-- conditionally limit the allowed methods
+- conditionally limit the allowed methods ==> it can be done into esup-otp-manager
 
 
 ### Drawbacks of esup-otp-cas-server compared to using Apereo CAS MFA (esup-otp-cas)
