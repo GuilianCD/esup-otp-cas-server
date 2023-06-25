@@ -174,7 +174,14 @@
                 var transport_text = transport && methods_and_transports.transports[transport];
                 if (opts.label[transport]) {
                     var text = opts.label[transport].replace('%TRANSPORT%', transport_text)
-                    choices.push({ method: method, real_methods: real_methods, transport: transport, transport_text: transport_text, text: text })
+                    choices.push({ 
+                        method: method, 
+                        real_methods: real_methods, 
+                        transport: transport, 
+                        transport_text: transport_text, 
+                        text: text,
+                        override_icon: opts.override_icon
+                    })
                 } else {
                     console.error("weird transport", transport, "for (pseudo) method", method)
                 }
@@ -201,7 +208,7 @@
                 return false;
             })
             button.append($("<span></span>").text(choice.text))
-            button.append($("<img>", { src: "images/liste-" + (choice.transport || choice.method) + ".svg" } ))
+            button.append($("<img>", { src: "images/liste-" + (choice.override_icon || choice.transport || choice.method) + ".svg" } ))
             return $("<li></li>").append(button)
         }))
         const last_send_message = user_params.last_send_message || {}
