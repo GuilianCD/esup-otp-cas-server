@@ -179,6 +179,68 @@ input, button {
     
 } 
 
+/* webauthn */
+
+.help-links li::before {
+    content: "〉"; 
+    color: #aaa;
+    font-size: 83%;
+    font-weight: 700; 
+}
+
+#webauthn .nomargin {
+    margin: 0;
+}
+
+#webauthn header {
+    margin-bottom: 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+#webauthn .title {
+    font-size: 1.5em;
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+    white-space: pre;
+}
+
+#webauthn .subtitle {
+    font-size: 1.25em;
+}
+
+#webauthn .subtle {
+    opacity: 0.8;
+}
+
+#webauthn .subtle:hover {
+    opacity: initial;
+}
+
+#webauthn .underlined {
+    text-decoration: underline;
+}
+
+
+#webauthn .factor {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.25em;
+
+    text-align: left; 
+    color: #00326E;
+    /*background-color: #dbebff;
+    border-radius: 8px;
+    padding: 0.25em;*/
+}
+
+
+
+
+
 
 /***********/ 
      
@@ -187,5 +249,7 @@ input, button {
    #content { padding:15px 15px;  }
     #token { width:68%; }
    input, button {  padding: 0.8rem; font-size: 15px; box-sizing: border-box;}
-    
+   #webauthn .authenticators-list {
+    grid-template-columns: 1fr;
+   }
  }
