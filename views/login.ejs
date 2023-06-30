@@ -67,7 +67,7 @@
        </div>
 
        <div id="webauthn" class="d-none">
-            <input type="hidden" id="wa_token" required autocomplete="off" name="token" value="">
+            <input type="hidden" id="wa_token" required autocomplete="off" value="">
 
             <header>
                 <p id="title" class="title nomargin"></p>
@@ -239,6 +239,14 @@
             showWebauthnMethod(params);
             return;
         }
+        // prevent double "token" field
+        // also, in case the user selects webauthn, but
+        // then goes back and chooses another method,
+        // the input field would not work.
+        // This "re-enables" the field, and disables
+        document.querySelector("#wa_token").name = "";
+        document.querySelector("#token").name = "token";
+
         if (chosen.method === 'push') {
             initializeSocket(params);
         }
@@ -558,9 +566,11 @@
             const verifdata = await res.json();
 
             // Success response
-            if(res.status - (res.status % 100) === 200) {
+            if(200 <= res.status && res.status < 300) {
                 // prevent double "token" field
-                document.querySelector("#token").remove();
+                document.querySelector("#wa_token").name = "token";
+                document.querySelector("#token").name = "";
+
                 document.querySelector("#wa_token").value = verifdata.token;
                 document.querySelector("#fm1").submit();
             }
